@@ -29,5 +29,23 @@ agent any
                             echo 'Build Success!'
                         }
                 }
+                post{
+                  always{
+                      emailtext{
+                           subject: "Pipeline Status: $(currentBuild.result)"
+                           body: '''<html>
+                                        <body>
+                                            <p>Build Status: $(currentBuild.result)</p>
+                                            <p>Build Number: $(currentBuild.number)</p>
+                                            <p>Check the <a href= "$(env_BUILD_URL)">Console output</a></p>
+                                         </body>
+                                     </html>''',
+                           to: "supriyaveeramally@gmail.com",
+                           from: "jenkins@example.com",
+                           replyTo: "jenkins@example.com",
+                           mimeType: 'text/html'
+                      }
+                  }
+                }
        }
 }
