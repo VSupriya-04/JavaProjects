@@ -35,8 +35,8 @@ agent any
                            subject: "Pipeline Status: $(currentBuild.result)"
                            body: '''<html>
                                         <body>
-                                            <p>Build Status: $(currentBuild.result)</p>
-                                            <p>Build Number: $(currentBuild.number)</p>
+                                            <p>Build Status: $(BUILD_STATUS)</p>
+                                            <p>Build Number: $(BUILD_NUMBER)</p>
                                             <p>Check the <a href= "$(env_BUILD_URL)">Console output</a></p>
                                          </body>
                                      </html>''',
