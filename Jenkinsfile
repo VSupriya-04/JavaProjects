@@ -1,44 +1,28 @@
 pipeline {
     agent any
-    tools {
-        maven 'MAVEN_HOME'
-    }
+
     stages {
-        stage('Stage 1: Hello Clean Stage 1') {
+        stage('Build') {
             steps {
-                bat 'mvn clean'
+                sh 'mvn clean compile'
+
+                sh 'mvn package'
             }
         }
-        stage ('Stage 2: Test Stage') {
+        stage('JUnit Test') {
             steps {
-                bat 'mvn test'
-            }
-        }
-        stage ('Stage 3: My Package') {
-            steps {
-                bat 'mvn package'
-            }
-        }
-        stage ('Stage 4: My Final Build Stage') {
-            steps {
-                bat 'mvn install'
-            }
-        }
-        stage ('Stage Final: Build Success') {
-            steps {
-                echo 'Build Success!'
+                sh 'mvn test'
+
+                junit '**/target/surefire-reports/*.xml'
             }
         }
     }
     post {
-        always {
-            try {
-                mail to: 'supriyaveeramally@gmail.com',
-                     subject: 'Build Notification',
-                     body: 'Build completed successfully!'
-            } catch (Exception e) {
-                echo "Error sending email: ${e.getMessage()}"
-            }
+        
+        failure {
+            mail to: 'supriyaveeramally@gmail.com',
+                 subject: 'Build failed: ${JOB_NAME} #${BUILD_NUMBER}',
+                 body: 'Check the console output for details.'
         }
     }
 }
