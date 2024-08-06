@@ -4,27 +4,17 @@ agent any
                         maven 'MAVEN_HOME'
                  }
           stages {
-                stage('Stage 1: Hello Clean Stage 1') {
+                stage('Clean Stage') {
                    steps {
                              bat 'mvn clean'
                           }
                 }
-                stage ('Stage 2: Test Stage') {
+                stage ('Test Stage') {
                   steps {
                             bat 'mvn test'
                         }
                 }
-                stage ('Stage 3: My Package') {
-                  steps {
-                             bat 'mvn package'
-                        }
-                }
-                stage ('Stage 4: My Final Build Stage') {
-                  steps {
-                           bat 'mvn install'
-                       }
-                }
-                stage ('Stage Final: Build Success') {
+                stage ('Build Stage') {
                   steps {
                             echo 'Build Success!'
                         }
@@ -34,7 +24,24 @@ agent any
                           junit '**/target/surefire-reports/*.xml'
                         }
                 }
-
+                post {
+                   success {
+                       emailext (
+                              to: 'supriyaveeramally@gmail.com',
+                              subject: 'Build ${BUILD_NUMBER} ${BUILD_STATUS}',
+                              body: 'Check the build logs for details.',
+                              attachmentsPattern: '**/*.log'
+                       )
+                   }
+                   failure {
+                       emailext (
+                           to: 'supriyaveeramally@gmail.com',
+                           subject: 'Build ${BUILD_NUMBER} ${BUILD_STATUS}',
+                           body: 'Check the build logs for details.',
+                           attachmentsPattern: '**/*.log'
+                       )
+                   }
+               }
        }
 }
 
