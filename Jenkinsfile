@@ -15,12 +15,6 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-        stage('JUnit Test') {
-            steps {
-                sh 'mvn test'
-                junit '**/target/surefire-reports/*.xml'
-            }
-        }
         stage('Email Notification') {
             steps {
                 mail to: 'supriyaveeramally@gmail.com',
