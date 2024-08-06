@@ -29,6 +29,12 @@ agent any
                             echo 'Build Success!'
                         }
                 }
+                stage('JUnit Test') {
+                  steps {
+                          junit '**/target/surefire-reports/*.xml'
+                        }
+                }
+
        }
 
       post {     
