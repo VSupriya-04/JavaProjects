@@ -1,27 +1,59 @@
 pipeline {
     agent any
+
     tools {
-        maven 'Maven'
+        maven 'MAVEN_HOME'
     }
+
     stages {
-        stage('Pre-build') {
+        stage('Clean Stage') {
             steps {
-                sh 'mvn clean validate'
-                sh 'mvn checkstyle:checkstyle'
+                bat 'mvn clean'
             }
         }
-        stage('Build') {
+        stage('Test Stage') {
             steps {
-                sh 'mvn clean package'
+                bat 'mvn test'
             }
         }
-        stage('Email Notification') {
+        stage('Build Stage') {
             steps {
-                mail to: 'supriyaveeramally@gmail.com',
-                     subject: 'Build ${BUILD_NUMBER} ${BUILD_STATUS}',
-                     body: 'Check the build logs for details.',
-                     attachmentsPattern: '**/*.log'
+                echo 'Build Success!'
             }
+        }
+        stage('JUnit Test') {
+            steps {
+                junit '**/target/surefire-reports/*.xml'
+            }
+        }
+        stage('SonarCloud Analysis') {
+            steps {
+                withSonarQubeEnv('SonarCloud') {
+                    sh 'mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${f1d037f54aee2e06cbd01225f8cf8c687bcf3c65} -Dsonar.password=${f1d037f54aee2e06cbd01225f8cf8c687bcf3c65}'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            sonarQualityGate()
+        }
+        success {
+            emailext (
+                to: 'supriyaveeramally@gmail.com',
+                subject: 'Build ${BUILD_NUMBER} ${BUILD_STATUS}',
+                body: 'Check the build logs for details.',
+                attachmentsPattern: '**/*.log'
+            )
+        }
+        failure {
+            emailext (
+                to: 'supriyaveeramally@gmail.com',
+                subject: 'Build ${BUILD_NUMBER} ${BUILD_STATUS}',
+                body: 'Check the build logs for details.',
+                attachmentsPattern: '**/*.log'
+            )
         }
     }
 }
