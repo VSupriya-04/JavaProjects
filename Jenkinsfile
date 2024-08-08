@@ -29,7 +29,7 @@ pipeline {
         stage('SonarCloud Analysis') {
             steps {
                 withSonarQubeEnv('SonarCloud') {
-                    sh 'mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${f1d037f54aee2e06cbd01225f8cf8c687bcf3c65} -Dsonar.password=${f1d037f54aee2e06cbd01225f8cf8c687bcf3c65}'
+                    sh 'mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=<VSupriya-04> -Dsonar.password=<f1d037f54aee2e06cbd01225f8cf8c687bcf3c65> -Dsonar.projectKey=<vsupriya-04>'
                 }
             }
         }
