@@ -15,11 +15,6 @@ pipeline {
             steps {
                 bat 'mvn test'
             }
-            post {
-                always {
-                    jacocoReport path: '**/target/site/jacoco/*.exec', aggregateSourceCodeCoverage()
-                }
-            }
         }
         stage('Build Stage') {
             steps {
@@ -34,7 +29,7 @@ pipeline {
         stage('SonarCloud Analysis') {
             steps {
                 withSonarQubeEnv('SonarCloud') {
-                    sh 'mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=<VSupriya-04> -Dsonar.password=<f1d037f54aee2e06cbd01225f8cf8c687bcf3c65> -Dsonar.projectKey=<vsupriya-04> -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml'
+                    sh 'mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=<VSupriya-04> -Dsonar.password=<f1d037f54aee2e06cbd01225f8cf8c687bcf3c65> -Dsonar.projectKey=<vsupriya-04>'
                 }
             }
         }
@@ -43,7 +38,6 @@ pipeline {
     post {
         always {
             junit '**/target/surefire-reports/*.xml'
-            jacoco path: '**/target/site/jacoco/*.exec'
             sonarQualityGate()
         }
         success {
