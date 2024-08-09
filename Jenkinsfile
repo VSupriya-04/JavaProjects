@@ -17,7 +17,7 @@ pipeline {
             }
             post {
                 always {
-                    jacocoReport aggregateSourceCodeCoverage()
+                    jacocoReport path: '**/target/site/jacoco/*.exec', aggregateSourceCodeCoverage()
                 }
             }
         }
@@ -43,7 +43,7 @@ pipeline {
     post {
         always {
             junit '**/target/surefire-reports/*.xml'
-            jacoco execPattern: '**/target/site/jacoco/*.exec'
+            jacoco path: '**/target/site/jacoco/*.exec'
             sonarQualityGate()
         }
         success {
